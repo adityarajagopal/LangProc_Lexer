@@ -6,7 +6,7 @@ int get_day_code (int year);
 int get_leap_year (int year);
 void print_calendar (FILE *fout, int year, int day_code, int leap_year);
 int get_year (void);
-main()
+int main()
 {
    
    int year, day_code, leap_year; 
