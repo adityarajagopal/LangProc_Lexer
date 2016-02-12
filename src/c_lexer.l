@@ -153,8 +153,10 @@ void update_file_name(char* yytext)
 	std::size_t	start = input_line.find('"');
 	std::size_t	end = input_line.find('"', start+1);
 
-	src_line = std::stoi(input_line.substr(sharp+2,(start-sharp-1))) - 1;
-	file_name = input_line.substr(start+1, (end-start-1));	
+	std::stringstream ss(input_line.substr(sharp+2,(start-sharp-1)));
+	ss >> src_line;
+	src_line--;
+	file_name = input_line.substr(start, (end-start+1));	
 }
 
 void class_constant(char* yytext, int token_type, int line_num, std::string& file_name, int src_line, std::string& output)

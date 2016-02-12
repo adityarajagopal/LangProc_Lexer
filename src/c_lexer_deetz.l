@@ -94,7 +94,7 @@ SPACE		" "*
 
 %%
 
-{SRC_FILE_1}{SRC_FILE_2}{SRC_FILE_3}		{ srcFileIn = yytext; srcLine = (atoi(&yytext[2]) - 1); return src_info; }
+{SRC_FILE_1}{SRC_FILE_2}{SRC_FILE_3}		{std::string tmpSrcFileIn(yytext); srcFileIn = tmpSrcFileIn; srcLine = (atoi(&yytext[2]) - 1); return src_info; }
 
 {HASH_FUNC}			{  return hash_func; }
 
@@ -141,13 +141,13 @@ SPACE		" "*
 
 int main()
 {
-	unsigned long quotestart = 0;
-	unsigned long quoteend = 0;
-	unsigned long quotediff = 0;
+	std::size_t quotestart = 0;
+	std::size_t quoteend = 0;
+	std::size_t quotediff = 0;
 	int x = 1;
     while(x){
 		switch(yylex()){
-		case src_info:		quotestart = srcFileIn.find("\"", quotestart + 1); quoteend = srcFileIn.find("\"", quotestart + 1); quotediff = quoteend - quotestart; srcFile = srcFileIn.substr(quotestart, quotediff); break;
+		case src_info:		quotestart = srcFileIn.find('"'); quoteend = srcFileIn.find('"', quotestart + 1); quotediff = quoteend - quotestart; srcFile = srcFileIn.substr(quotestart, quotediff+1); break;
 		case hash_func:		break;
 		case loopkey:		std::cout << strVal << " Keyword " << "T_" << strVal << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case returnkey:		std::cout << strVal << " Keyword " << "T_" << strVal << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
@@ -155,7 +155,6 @@ int main()
 		case loopctrlkey:	std::cout << strVal << " Keyword " << "T_" << strVal << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case selectkey:		std::cout << strVal << " Keyword " << "T_" << strVal << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case typekey:		std::cout << strVal << " Keyword " << "T_" << strVal << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
-		case sizeof_op:		std::cout << opName << " Opeator " << "T_" << opName  << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case defkey:		std::cout << strVal << " Keyword " << "T_" << strVal << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case underkey:		std::cout << strVal << " Keyword " << "T_" << strVal << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case floats:		std::cout << constfloat << " Constant " << "T_float " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
@@ -164,6 +163,7 @@ int main()
 		case digit:			std::cout << constant << " Constant " << "T_int " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case chars:			std::cout << constchar << " Constant " << "T_char " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case id:			std::cout << IDVal << " Identifier " << "T_ID " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
+		case sizeof_op:		std::cout << opName << " Operator " << "T_" << opName  << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case oper:			std::cout << opName << " Operator " << "T_" << opName << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case semi_colon:	std::cout << opName << " Operator " << "T_" << opName << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
 		case inc:			std::cout << opName << " Operator " << "T_" << opName << " " << lines << " " << srcFile << "  " << srcLine << std::endl; break;
